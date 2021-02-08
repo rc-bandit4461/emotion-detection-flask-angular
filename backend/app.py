@@ -36,20 +36,20 @@ def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+            # flash('No file part')
+            return {'data':'No file'}
         file = request.files['file']
         if file.filename == '':
-            flash('No file selected for uploading')
-            return redirect(request.url)
+            # flash('No file selected for uploading')
+            return {'data':'No file selected for uploading'}
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            flash('File successfully uploaded')
-            return redirect('/')
+            # flash('File successfully uploaded')
+            return {'data':'file uploaded successfully'}
         else:
-            flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
-            return redirect(request.url)
+            # flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
+            return {'data':'Allowed file types are txt, pdf, png, jpg, jpeg, gif'}
 
 
 if __name__ == "__main__":

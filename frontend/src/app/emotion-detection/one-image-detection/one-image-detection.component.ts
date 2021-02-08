@@ -1,9 +1,9 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {UploadService} from '../../upload.service';
-import {HttpClient, HttpErrorResponse, HttpEventType} from '@angular/common/http';
+import {HttpClient, HttpErrorResponse, HttpEventType, HttpHeaders} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {NgModel} from '@angular/forms';
+import {FormBuilder, FormGroup, NgModel} from '@angular/forms';
 
 @Component({
   selector: 'app-one-image-detection',
@@ -18,10 +18,20 @@ export class OneImageDetectionComponent implements OnInit {
   fileUpload: ElementRef;
   files = [];
 
-  constructor(private uploadService: UploadService,private http:HttpClient) {
+
+    public currentImage:string='';
+    public currentImageFile:any;
+    public message:string='';
+    public detectionForm: FormGroup;
+
+
+  constructor(private uploadService: UploadService,private http:HttpClient, private formBuilder: FormBuilder) {
   }
 
   ngOnInit(): void {
+    this.detectionForm = this.formBuilder.group({
+
+    });
   }
 
   // uploadFile(file: any) {
@@ -71,30 +81,42 @@ export class OneImageDetectionComponent implements OnInit {
     })
   }
 
-  // onClick() {
-  //   const fileUpload = this.fileUpload.nativeElement;
-  //   console.log(fileUpload);
-  //   fileUpload.onchange = () => {
-  //     for (let index = 0; index < fileUpload.files.length; index++) {
-  //       const file = fileUpload.files[index];
-  //       this.files.push({data: file, inProgress: false, progress: 0});
-  //     }
-  //     // this.uploadFile();
-  //   };
-  //   // fileUpload.click();
-  // }
 
-  onChangeFile($event: Event) {
-    console.log($event);
-    console.log(this.fileUpload);
-    console.log(this.files);
+
+
+
+
+
+
+
+
+  onFileChange(event:any) {
+    const reader = new FileReader();
+    if(event.target.files && event.target.files.length) {
+      const [file] = event.target.files;
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        this.currentImage = reader.result as string;
+        this.currentImageFile = file;
+        this.message = '';
+        console.log(this.currentImageFile);
+      };
+    }
+    else{
+      this.currentImageFile = null;
+      this.currentImage = '';
+    }
   }
-
-  onSubmitFile() {
-
-  }
-
-  log(fileUpload: NgModel) {
-    console.log(fileUpload);
+  onSubmit(){
+    if(this.currentImage === '' || !this.currentImageFile) {
+      this.message = "Image required !!!";
+      return ;
+    }
+    this.uploadService.submitImage(this.currentImageFile).subscribe((res)=>{
+      console.log(res);
+      this.message = res['data'];
+    },(er)=>{
+      console.error(er);
+    });
   }
 }
