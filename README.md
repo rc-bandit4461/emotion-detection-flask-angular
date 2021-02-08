@@ -3,7 +3,7 @@
 to run the app
  > pip install flask flask-cors rq
 # run
-## Backend
+## Backend (on port 5000)
  > python app.py
-## Frontend
+## Frontend (on port 4200)
  > ng serve
