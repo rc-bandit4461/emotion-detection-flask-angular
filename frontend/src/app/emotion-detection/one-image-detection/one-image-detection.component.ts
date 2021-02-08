@@ -53,7 +53,7 @@ export class OneImageDetectionComponent implements OnInit {
     this.http.get(this.uploadService.SERVER_URL + "/api/test").subscribe(response => {
       console.log(response);
     }, error => {
-      console.log(error);
+      console.error(error);
     })
   }
   handleFileInput(files: FileList) {

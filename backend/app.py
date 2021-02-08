@@ -4,7 +4,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 from flask_cors import cross_origin
 app=Flask(__name__)
-cors = CORS(app, resources={r"*": {"origins": "*"}})
+cors = CORS(app)
 app.secret_key = "secret key"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
@@ -24,10 +24,11 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# @cross_origin(origin='localhost')
+# @cross_origin(origin='*')
 @app.route('/api/test')
 def hello_world():
-    return "OK"
+    return {'data':'salam'}
+
 
 
 @app.route('/upload', methods=['POST'])

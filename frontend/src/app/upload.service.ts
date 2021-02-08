@@ -7,7 +7,7 @@ import {Observable} from 'rxjs';
 })
 export class UploadService {
 
-  SERVER_URL: string = 'localhost:5000';
+  SERVER_URL: string = 'http://localhost:5000';
 
   constructor(private httpClient: HttpClient) {
   }
