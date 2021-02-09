@@ -5,8 +5,6 @@ import {NgOpenCVService, OpenCVLoadResult} from 'ng-open-cv';
 import {filter, switchMap, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 
-// import {utils} from 'protractor';
-
 @Component({
   selector: 'app-live-detection',
   templateUrl: './live-detection.component.html',
@@ -40,10 +38,6 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
       .then((mediaDevices: MediaDeviceInfo[]) => {
         this.multipleWebcamsAvailable = mediaDevices && mediaDevices.length > 1;
       }).finally(() => {
-      /*let tmp = this;
-      setInterval(function(){
-        tmp.trigger.next();
-      },5000);*/
     });
     this.initOpenCV();
   }
@@ -87,13 +81,7 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
   }
 
 //OPENCV
-//OPENCV
-//OPENCV
-//OPENCV
-//OPENCV
-//OPENCV
-//OPENCV
-  imageUrl = 'assets/DaveChappelle.jpg';
+
   // Notifies of the ready state of the classifiers load operation
   private classifiersLoaded = new BehaviorSubject<boolean>(false);
   classifiersLoaded$ = this.classifiersLoaded.asObservable();
@@ -156,71 +144,13 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // detectFace() {
-  //   // before detecting the face we need to make sure that
-  //   // 1. OpenCV is loaded
-  //   // 2. The classifiers have been loaded
-  //   this.ngOpenCVService.isReady$
-  //     .pipe(
-  //       filter((result: OpenCVLoadResult) => result.ready),
-  //       switchMap(() => {
-  //         return this.classifiersLoaded$;
-  //       }),
-  //       tap(() => {
-  //         this.clearOutputCanvas();
-  //         this.findFaceAndEyes();
-  //       })
-  //     )
-  //     .subscribe(() => {
-  //       console.log('Face detected');
-  //     });
-  // }
 
   clearOutputCanvas() {
     const context = this.canvasOutput.nativeElement.getContext('2d');
     context.clearRect(0, 0, this.canvasOutput.nativeElement.width, this.canvasOutput.nativeElement.height);
   }
 
-  // findFaceAndEyes() {
-  //   // Example code from OpenCV.js to perform face and eyes detection
-  //   // Slight adapted for Angular
-  //   const src = cv.imread(this.canvasInput.nativeElement.id);
-  //   const gray = new cv.Mat();
-  //   cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-  //   const faces = new cv.RectVector();
-  //   const eyes = new cv.RectVector();
-  //   const faceCascade = new cv.CascadeClassifier();
-  //   const eyeCascade = new cv.CascadeClassifier();
-  //   // load pre-trained classifiers, they should be in memory now
-  //   faceCascade.load('haarcascade_frontalface_default.xml');
-  //   eyeCascade.load('haarcascade_eye.xml');
-  //   // detect faces
-  //   const msize = new cv.Size(0, 0);
-  //   faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
-  //   for (let i = 0; i < faces.size(); ++i) {
-  //     const roiGray = gray.roi(faces.get(i));
-  //     const roiSrc = src.roi(faces.get(i));
-  //     const point1 = new cv.Point(faces.get(i).x, faces.get(i).y);
-  //     const point2 = new cv.Point(faces.get(i).x + faces.get(i).width, faces.get(i).y + faces.get(i).height);
-  //     cv.rectangle(src, point1, point2, [255, 0, 0, 255]);
-  //     // detect eyes in face ROI
-  //     eyeCascade.detectMultiScale(roiGray, eyes);
-  //     for (let j = 0; j < eyes.size(); ++j) {
-  //       const point3 = new cv.Point(eyes.get(j).x, eyes.get(j).y);
-  //       const point4 = new cv.Point(eyes.get(j).x + eyes.get(j).width, eyes.get(j).y + eyes.get(j).height);
-  //       cv.rectangle(roiSrc, point3, point4, [0, 0, 255, 255]);
-  //     }
-  //     roiGray.delete();
-  //     roiSrc.delete();
-  //   }
-  //   cv.imshow(this.canvasOutput.nativeElement.id, src);
-  //   src.delete();
-  //   gray.delete();
-  //   faceCascade.delete();
-  //   eyeCascade.delete();
-  //   faces.delete();
-  //   eyes.delete();
-  // }
+
 
   findFaceAndEyes2(src, output) {
     // Example code from OpenCV.js to perform face and eyes detection
@@ -293,16 +223,6 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
         const gray = new cv.Mat();
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
         const faces = new cv.RectVector();
-        // ctx.http.post('http://localhost:5000/matrix', {'data': src.data, 'OK':'OK'}, {
-        //   headers: {
-        //     'Content-Type': 'application/json'
-        //   }
-        // }).subscribe(value => {
-        //   console.log('SENT');
-        //   console.log(value);
-        // }, error => {
-        //   console.log(error);
-        // });
 
         const msize = new cv.Size(0, 0);
         faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
@@ -349,7 +269,6 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
         // src.delete();
         // gray.delete();
         // faceCascade.delete();
-        // eyeCascade.delete();
         faces.delete();
         // eyes.delete();
 
@@ -367,42 +286,4 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
 
 
   }
-
-  detect(src) {
-    const gray = new cv.Mat();
-    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY, 0);
-    const faces = new cv.RectVector();
-    const eyes = new cv.RectVector();
-    const faceCascade = new cv.CascadeClassifier();
-    const eyeCascade = new cv.CascadeClassifier();
-    // load pre-trained classifiers, they should be in memory now
-    faceCascade.load('haarcascade_frontalface_default.xml');
-    eyeCascade.load('haarcascade_eye.xml');
-    // detect faces
-    const msize = new cv.Size(0, 0);
-    faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
-    for (let i = 0; i < faces.size(); ++i) {
-      const roiGray = gray.roi(faces.get(i));
-      const roiSrc = src.roi(faces.get(i));
-      const point1 = new cv.Point(faces.get(i).x, faces.get(i).y);
-      const point2 = new cv.Point(faces.get(i).x + faces.get(i).width, faces.get(i).y + faces.get(i).height);
-      cv.rectangle(src, point1, point2, [255, 0, 0, 255]);
-      // detect eyes in face ROI
-      eyeCascade.detectMultiScale(roiGray, eyes);
-      for (let j = 0; j < eyes.size(); ++j) {
-        const point3 = new cv.Point(eyes.get(j).x, eyes.get(j).y);
-        const point4 = new cv.Point(eyes.get(j).x + eyes.get(j).width, eyes.get(j).y + eyes.get(j).height);
-        cv.rectangle(roiSrc, point3, point4, [0, 0, 255, 255]);
-      }
-      roiGray.delete();
-      roiSrc.delete();
-    }
-    src.delete();
-    gray.delete();
-    faceCascade.delete();
-    eyeCascade.delete();
-    faces.delete();
-    eyes.delete();
-  }
-
 }
