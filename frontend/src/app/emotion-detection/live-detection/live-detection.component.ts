@@ -4,6 +4,7 @@ import {BehaviorSubject, forkJoin, fromEvent, Observable, Subject} from 'rxjs';
 import {NgOpenCVService, OpenCVLoadResult} from 'ng-open-cv';
 import {filter, switchMap, tap} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
+// import {type} from 'os';
 
 @Component({
   selector: 'app-live-detection',
@@ -226,14 +227,17 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
 
         const msize = new cv.Size(0, 0);
         faceCascade.detectMultiScale(gray, faces, 1.1, 3, 0, msize, msize);
-        for (let i = 0; i < faces.size(); ++i) {
+        for (let i = 0; i < faces.size(); i++) {
           const roiGray = gray.roi(faces.get(i));
           // console.log(faces.get(i));
           const roiSrc = src.roi(faces.get(i));
           // @ts-ignore
-          console.log(btoa(roiSrc['data']));
-          if (!called) {
-          component.http.post('http://localhost:5000/matrix', {'data': roiSrc.data, 'OK': 'OK'}, {
+          // console.log(btoa(roiSrc['data']));
+          console.log('gray--->' + (gray == null ? 'GOOD':'Undefined'));
+          console.log('src--->' + (src == null ? 'GOOD':'Undefined'));
+          console.log('roiSrc--->' + (roiSrc == null ? 'GOOD':'Undefined'));
+          console.log('roiGray--->' + (src.roi(faces.get(0)) == null ? 'GOOD':'Undefined'));
+          component.http.post('http://localhost:5000/matrix', {'data': gray.roi(faces.get(i)).data, 'OK': 'OK'}, {
             headers: {
               'Content-Type': 'application/json'
             }
@@ -245,12 +249,12 @@ export class LiveDetectionComponent implements OnInit, AfterViewInit {
             called = true;
             console.log(error);
           });
-        }
+
           const point1 = new cv.Point(faces.get(i).x, faces.get(i).y);
           const point2 = new cv.Point(faces.get(i).x + faces.get(i).width, faces.get(i).y + faces.get(i).height);
           cv.rectangle(src, point1, point2, [255, 0, 0, 255]);
-          roiGray.delete();
-          roiSrc.delete();
+          // roiGray.delete();
+          // roiSrc.delete();
         }
 
         cv.imshow('canvasOutput', src);

@@ -36,11 +36,17 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+@cross_origin(origin='*')
+@app.route('/api/test')
+def hello_world():
+    return {'data':'salam'}
 
 @cross_origin(origin='localhost')
 @app.route('/matrix', methods=['POST'])
 def matrix():
     content = request.get_json(silent=True)
+    print(len(content))
+    print(np.array(content['data']).shape)
     return {'resp':'OK'}
 
 
@@ -79,7 +85,7 @@ def upload_file():
             return send_from_directory(directory=renders, filename='result_'+_hash+'.jpg')
         else:
             # flash('Allowed file types are txt, pdf, png, jpg, jpeg, gif')
-            return {'data':'Allowed file types are txt, pdf, png, jpg, jpeg, gif'}
+            return {'data':'Allowed file types are png, jpeg, jpg'}
             
 
 if __name__ == "__main__":
